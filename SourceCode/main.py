@@ -5,7 +5,7 @@ import os
 
 import logging
 from telegram import Update
-from telegram.ext import ApplicationBuilder, ContextTypes, CommandHandler
+from telegram.ext import ApplicationBuilder, ContextTypes, CommandHandler, MessageHandler, filters, InlineQueryHandler
 
 import commands
 
@@ -27,19 +27,39 @@ logging.basicConfig(
 if __name__ == '__main__':
     application = ApplicationBuilder().token(TELEGRAM_BOT_TOKEN).build()
     
+    # Command handler --> /command anyth
     start_handler = CommandHandler('start', commands.start)
     help_handler = CommandHandler('help', commands.help)  # Nuevo manejador para /help
     d6_handler = CommandHandler('d6', commands.d6)
     animated_d6_handler = CommandHandler('animated_d6', commands.animated_d6)
     flag_handler = CommandHandler('flag', commands.flag)
+    
     pruebas_handler = CommandHandler('pruebas', commands.pruebas)
+    unknown_handler = MessageHandler(filters.COMMAND, commands.unknown)
 
+    # Message handler --> text
+    echo_handler = MessageHandler(filters.TEXT & (~filters.COMMAND), commands.echo) # no deja pasar los comandos -> condicion en el filtro
+
+    # inline handler --> @bot query
+    inline_mayus_handler = InlineQueryHandler(commands.inline_mayus)
+    inline_minus_handler = InlineQueryHandler(commands.inline_minus)
+    
+
+    # add
     application.add_handler(start_handler)
     application.add_handler(help_handler)  # Agrega el manejador de /help
     application.add_handler(d6_handler)
     application.add_handler(animated_d6_handler)
     application.add_handler(flag_handler)
+
     application.add_handler(pruebas_handler)
+    application.add_handler(unknown_handler)
+
+    application.add_handler(echo_handler)
+
+    application.add_handler(inline_minus_handler)
+    application.add_handler(inline_mayus_handler)
     
     
+    # RUN
     application.run_polling()
