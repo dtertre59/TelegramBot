@@ -16,8 +16,6 @@ load_dotenv()
 
 TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
 
-print(TELEGRAM_BOT_TOKEN)
-
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     level=logging.INFO
@@ -25,7 +23,9 @@ logging.basicConfig(
 
 
 if __name__ == '__main__':
+
     application = ApplicationBuilder().token(TELEGRAM_BOT_TOKEN).build()
+    print("INICIANDO BOT")
     
     # Command handler --> /command anyth
     start_handler = CommandHandler('start', commands.start)
@@ -35,13 +35,14 @@ if __name__ == '__main__':
     flag_handler = CommandHandler('flag', commands.flag)
     
     pruebas_handler = CommandHandler('pruebas', commands.pruebas)
-    unknown_handler = MessageHandler(filters.COMMAND, commands.unknown)
 
     # Message handler --> text
-    echo_handler = MessageHandler(filters.TEXT & (~filters.COMMAND), commands.echo) # no deja pasar los comandos -> condicion en el filtro
+    # echo_handler = MessageHandler(filters.TEXT & (~filters.COMMAND), commands.echo) # no deja pasar los comandos -> condicion en el filtro
+    ia_handler = MessageHandler(filters.TEXT & (~filters.COMMAND), commands.ia)
+    unknown_handler = MessageHandler(filters.COMMAND, commands.unknown)
 
     # inline handler --> @bot query
-    inline_mayus_handler = InlineQueryHandler(commands.inline_mayus)
+    inline_mayus_handler = InlineQueryHandler(commands.inline_mayus) # solo funciona la rimera que se pone. es como si estubiera limitado a una inline unicamente
     inline_minus_handler = InlineQueryHandler(commands.inline_minus)
     
 
@@ -53,9 +54,10 @@ if __name__ == '__main__':
     application.add_handler(flag_handler)
 
     application.add_handler(pruebas_handler)
-    application.add_handler(unknown_handler)
 
-    application.add_handler(echo_handler)
+    # application.add_handler(echo_handler)
+    application.add_handler(ia_handler)
+    application.add_handler(unknown_handler)
 
     application.add_handler(inline_minus_handler)
     application.add_handler(inline_mayus_handler)

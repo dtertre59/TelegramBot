@@ -1,50 +1,55 @@
 
 from telegram import Update
-from telegram.ext import ApplicationBuilder, ContextTypes, CommandHandler
-
+from telegram.ext import ContextTypes
 from telegram import InlineQueryResultArticle, InputTextMessageContent
-from telegram.ext import InlineQueryHandler
 
-import functions
+import helper_functions
 
-# respond messages
+# ---------- MESSAGES FUNCTIONS ---------------------------------------------------------------------------------------------- #
+
 async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await context.bot.send_message(chat_id=update.effective_chat.id, text=update.message.text)
 
+async def ia(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    chat_id=update.effective_chat.id
+    question = update.message.text
+    answer = helper_functions.message_menu(chat_id, question)
+    await context.bot.send_message(chat_id, answer)
 
-# resond commands
+# ---------- COMMANDS FUNCTIONS ---------------------------------------------------------------------------------------------- #
+
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await context.bot.send_message(chat_id=update.effective_chat.id, text="I'm an Ingenuity bot, please talk to me!")
 
 async def help(update: Update, context: ContextTypes.DEFAULT_TYPE):
     response_message = """
 ¡Hola! Soy el bot de Ingenuity. Estas son las opciones disponibles:
-    <b>/start</b> - Iniciar la conversación
-    <b>/help</b> - Mostrar comandos
-    <b>/d6</b> - Numero random entre 1 y 6
-    <b>/animated_d6</b> - Animacion de dado entre 1 y 6
-    <b>/flag country</b> - foto de la bandera del pais introducido
-    <b>/pruebas</b> - pruebas
+<b>/start</b> - Iniciar la conversación
+<b>/help</b> - Mostrar comandos
+<b>/d6</b> - Numero random entre 1 y 6
+<b>/animated_d6</b> - Animacion de dado entre 1 y 6
+<b>/flag country</b> - foto de la bandera del pais introducido
+<b>/pruebas</b> - pruebas
     """
     await context.bot.send_message(chat_id=update.effective_chat.id, text=response_message, parse_mode='HTML') # parac poder utilizar etiquetas HTML
 
 # numero random del 1-6
 async def d6(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    result = functions.roll_d6()
+    result = helper_functions.roll_d6()
     await context.bot.send_message(chat_id=update.effective_chat.id, text=result)
 
 # gif de dado entre 1-6
 async def animated_d6(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    result = functions.roll_d6()
-    animation = functions.get_d6_img(result)
+    result = helper_functions.roll_d6()
+    animation = helper_functions.get_d6_img(result)
     await context.bot.send_animation(chat_id=update.effective_chat.id,animation=animation)
 
 # foto de la bandera dependiendo de la entrada del primer argumento
 async def flag(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
-        url = functions.get_url_flag(context.args[0])
+        url = helper_functions.get_url_flag(context.args[0])
     except:
-        url = functions.get_url_flag('ES')
+        url = helper_functions.get_url_flag('ES')
     chat_id = update.message.chat_id
     await context.bot.send_photo(chat_id,url)
 
