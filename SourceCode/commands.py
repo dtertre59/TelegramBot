@@ -3,7 +3,7 @@ from telegram import Update
 from telegram.ext import ContextTypes
 from telegram import InlineQueryResultArticle, InputTextMessageContent
 
-import helper_functions
+import helper_functions, ai_functions, audio_functions
 
 # ---------- MESSAGES FUNCTIONS ---------------------------------------------------------------------------------------------- #
 
@@ -13,8 +13,10 @@ async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def ia(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id=update.effective_chat.id
     question = update.message.text
-    answer = helper_functions.message_menu(chat_id, question)
-    await context.bot.send_message(chat_id, answer)
+    answer = ai_functions.message_menu(chat_id, question)
+    # await context.bot.send_message(chat_id, answer)
+    audio_path = audio_functions.text_to_audio_ogg(chat_id, answer)
+    await context.bot.send_audio(chat_id=chat_id, audio=audio_path)
 
 # ---------- COMMANDS FUNCTIONS ---------------------------------------------------------------------------------------------- #
 
@@ -23,13 +25,20 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def help(update: Update, context: ContextTypes.DEFAULT_TYPE):
     response_message = """
-¡Hola! Soy el bot de Ingenuity. Estas son las opciones disponibles:
+Hello! I'm Tunoo. Estas son las opciones disponibles:
+
+<b>COMMANDS</b>
 <b>/start</b> - Iniciar la conversación
 <b>/help</b> - Mostrar comandos
 <b>/d6</b> - Numero random entre 1 y 6
 <b>/animated_d6</b> - Animacion de dado entre 1 y 6
 <b>/flag country</b> - foto de la bandera del pais introducido
+b>/audio</b> - audio.mp3
 <b>/pruebas</b> - pruebas
+
+<b>PLAIN TEXT</b>
+new -> restart conversation with the bot
+
     """
     await context.bot.send_message(chat_id=update.effective_chat.id, text=response_message, parse_mode='HTML') # parac poder utilizar etiquetas HTML
 
@@ -52,6 +61,14 @@ async def flag(update: Update, context: ContextTypes.DEFAULT_TYPE):
         url = helper_functions.get_url_flag('ES')
     chat_id = update.message.chat_id
     await context.bot.send_photo(chat_id,url)
+
+async def audio(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    chat_id=update.effective_chat.id
+    text = " ".join(context.args)
+    print(text)
+    # audio_path = audio_functions.text_to_audio(chat_id, text)
+    audio_path = audio_functions.text_to_audio_ogg(chat_id, text)
+    await context.bot.send_audio(chat_id=chat_id, audio=audio_path)
 
 
 # comando incorrecto

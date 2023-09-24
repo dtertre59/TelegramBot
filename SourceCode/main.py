@@ -10,11 +10,10 @@ from telegram.ext import ApplicationBuilder, ContextTypes, CommandHandler, Messa
 import commands
 
 
-
 # Cargar las variables de entorno desde el archivo .env
 load_dotenv()
 
-TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
+TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_ACEITUNO_TOKEN')
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -33,6 +32,7 @@ if __name__ == '__main__':
     d6_handler = CommandHandler('d6', commands.d6)
     animated_d6_handler = CommandHandler('animated_d6', commands.animated_d6)
     flag_handler = CommandHandler('flag', commands.flag)
+    audio_handler = CommandHandler('audio', commands.audio)
     
     pruebas_handler = CommandHandler('pruebas', commands.pruebas)
 
@@ -52,6 +52,7 @@ if __name__ == '__main__':
     application.add_handler(d6_handler)
     application.add_handler(animated_d6_handler)
     application.add_handler(flag_handler)
+    application.add_handler(audio_handler)
 
     application.add_handler(pruebas_handler)
 
