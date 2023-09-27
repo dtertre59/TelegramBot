@@ -72,15 +72,15 @@ def ai(chat_id: int, question: str) -> str:
 
 # ---------- MAIN MESSAGE MENU --------------------------------------------------------------- #
 
-def message_menu(chat_id: int, text: str) -> str:
+def message_menu(chat_id: int, text: str) -> tuple[str, str]:
     if text == "new":
         new_conversation(chat_id)
-        return "new chatbot conversation 😈"
+        return "t", "😈 new chatbot conversation 😈"
     elif text == "dtertre59":
-        return "mi fooking padre"
+        return 't', "mi fooking padre"
     else:
         answer = ai(chat_id, text)
-        return answer
+        return 'a', answer
 
 
 

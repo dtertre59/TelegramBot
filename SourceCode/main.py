@@ -26,6 +26,7 @@ if __name__ == '__main__':
     application = ApplicationBuilder().token(TELEGRAM_BOT_TOKEN).build()
     print("INICIANDO BOT")
     
+
     # Command handler --> /command anyth
     start_handler = CommandHandler('start', commands.start)
     help_handler = CommandHandler('help', commands.help)  # Nuevo manejador para /help
@@ -34,10 +35,10 @@ if __name__ == '__main__':
     flag_handler = CommandHandler('flag', commands.flag)
     audio_handler = CommandHandler('audio', commands.audio)
     
-    pruebas_handler = CommandHandler('pruebas', commands.pruebas)
 
     # Message handler --> text
     # echo_handler = MessageHandler(filters.TEXT & (~filters.COMMAND), commands.echo) # no deja pasar los comandos -> condicion en el filtro
+    m_audio_handler = MessageHandler(filters.VOICE, commands.m_audio)
     ia_handler = MessageHandler(filters.TEXT & (~filters.COMMAND), commands.ia)
     unknown_handler = MessageHandler(filters.COMMAND, commands.unknown)
 
@@ -54,9 +55,8 @@ if __name__ == '__main__':
     application.add_handler(flag_handler)
     application.add_handler(audio_handler)
 
-    application.add_handler(pruebas_handler)
-
     # application.add_handler(echo_handler)
+    application.add_handler(m_audio_handler)
     application.add_handler(ia_handler)
     application.add_handler(unknown_handler)
 

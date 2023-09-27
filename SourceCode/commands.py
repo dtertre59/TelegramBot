@@ -10,13 +10,24 @@ import helper_functions, ai_functions, audio_functions
 async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await context.bot.send_message(chat_id=update.effective_chat.id, text=update.message.text)
 
+async def m_audio(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    chat_id=update.effective_chat.id
+    audio_functions.url_download_audio(update)
+
+
+    # ES NECESARIO PASAR EL AUDIO A .WAV PARA PODER PASARLO A TEXTO CON LA FUNCION  AUDIOWAVTORTEXT EN AUDIO
+
+    await context.bot.send_message(chat_id, "HOOOOOOOLLLAAAAA")
+
 async def ia(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id=update.effective_chat.id
     question = update.message.text
-    answer = ai_functions.message_menu(chat_id, question)
-    # await context.bot.send_message(chat_id, answer)
-    audio_path = audio_functions.text_to_audio_ogg(chat_id, answer)
-    await context.bot.send_audio(chat_id=chat_id, audio=audio_path)
+    type, answer = ai_functions.message_menu(chat_id, question)
+    if type == 't': # text
+        await context.bot.send_message(chat_id, answer)
+    elif type == 'a': # audio
+        audio_path = audio_functions.text_to_audio_ogg(chat_id, answer)
+        await context.bot.send_audio(chat_id=chat_id, audio=audio_path)
 
 # ---------- COMMANDS FUNCTIONS ---------------------------------------------------------------------------------------------- #
 
@@ -27,20 +38,21 @@ async def help(update: Update, context: ContextTypes.DEFAULT_TYPE):
     response_message = """
 Hello! I'm Tunoo. Estas son las opciones disponibles:
 
-<b>COMMANDS</b>
-<b>/start</b> - Iniciar la conversación
-<b>/help</b> - Mostrar comandos
-<b>/d6</b> - Numero random entre 1 y 6
-<b>/animated_d6</b> - Animacion de dado entre 1 y 6
-<b>/flag country</b> - foto de la bandera del pais introducido
-b>/audio</b> - audio.mp3
-<b>/pruebas</b> - pruebas
+COMMANDS:
+/start - Iniciar la conversación
+/help - Mostrar comandos
+/d6 - Numero rand(1-6)
+/animated_d6 - Animacion dado rand(1-6)
+/flag country - foto de la bandera pais introducido
+/audio - audio.mp3
 
-<b>PLAIN TEXT</b>
-new -> restart conversation with the bot
+PLAIN TEXT:
+new -> new openai conversation
 
-    """
-    await context.bot.send_message(chat_id=update.effective_chat.id, text=response_message, parse_mode='HTML') # parac poder utilizar etiquetas HTML
+AUDIO:
+
+"""
+    await context.bot.send_message(chat_id=update.effective_chat.id, text=response_message) #, parse_mode='html') # parac poder utilizar etiquetas HTML
 
 # numero random del 1-6
 async def d6(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -111,17 +123,21 @@ async def inline_minus(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await context.bot.answer_inline_query(update.inline_query.id, results)
 
 
+
+
+
+
 # -------- PRUEBAS -------------------------------------------------------- #
 
 
-async def pruebas(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    try:
-        msg = ' '.join(context.args).upper() # hace estring y lo pone en mayusculas
-        # msg = context.args[0]
-    except:
-        try:
-            msg = context.args[0] + " Provide 1 more arguments"
-        except:
-            msg = "Provide 2 more arguments"
-    chat_id = update.message.chat_id
-    await context.bot.send_message(chat_id,msg)
+# async def pruebas(update: Update, context: ContextTypes.DEFAULT_TYPE):
+#     try:
+#         msg = ' '.join(context.args).upper() # hace estring y lo pone en mayusculas
+#         # msg = context.args[0]
+#     except:
+#         try:
+#             msg = context.args[0] + " Provide 1 more arguments"
+#         except:
+#             msg = "Provide 2 more arguments"
+#     chat_id = update.message.chat_id
+#     await context.bot.send_message(chat_id,msg)
