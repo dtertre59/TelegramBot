@@ -1,6 +1,12 @@
 # TelegramBot
 
 
-pARA MODIFICAR ARCHIVOS DE AUDIO Y UTILIZAR LA LIBRERIA PYDUB HACE FALTA ISTALAR FFMPEG
-METER LA UBICACION DEL BIN DE LA APLICACION EN EL ARCHIVO  DE ACTIVACIÓN DEL ENTORNO VIRTUAL
-set PATH=C:\Program Files\FFmpeg\bin;%PATH%
+## Autor
+
+David Tertre Boyé
+
+## Resumen
+
+Programación de un bot de telegram (Aceituno) en python. 
+Tiene implementado inteligencia artificial y FFmpeg como software externo para el tratamiento del audio.
+El bot es capaz de recibir procesar y responder tanto por texto como por audio.

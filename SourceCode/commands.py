@@ -15,11 +15,16 @@ async def m_audio(update: Update, context: ContextTypes.DEFAULT_TYPE):
     audio_functions.url_download_audio(update)
     # descarga del audio en carpeta /audio2/audio.ogg
     # pasar a formato WAV
-    audio_functions.audio_ogg_to_wav("audio2/audio.ogg")
-    # ya tenemos el .wav
-    ## podemos analizar lo que dicew el audio, pasarlo a texto y enviarselo a chat gpt
-
-    await context.bot.send_message(chat_id, "HOOOOOOOLLLAAAAA")
+    audio_functions.audio_ogg_to_wav(f"audio_t/{chat_id}.ogg")
+    # pasar de .wav a text
+    question = audio_functions.audio_wav_to_text(f"audio_t/{chat_id}.wav", True)
+    # enviar pregunta a chatgpt
+    type, answer = ai_functions.message_menu(chat_id, question)
+    if type == 't': # text
+        await context.bot.send_message(chat_id, answer)
+    elif type == 'a': # audio
+        audio_path = audio_functions.text_to_audio_ogg(chat_id, answer)
+        await context.bot.send_audio(chat_id=chat_id, audio=audio_path)
 
 async def ia(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id=update.effective_chat.id
@@ -30,6 +35,7 @@ async def ia(update: Update, context: ContextTypes.DEFAULT_TYPE):
     elif type == 'a': # audio
         audio_path = audio_functions.text_to_audio_ogg(chat_id, answer)
         await context.bot.send_audio(chat_id=chat_id, audio=audio_path)
+
 
 # ---------- COMMANDS FUNCTIONS ---------------------------------------------------------------------------------------------- #
 
@@ -84,12 +90,9 @@ async def audio(update: Update, context: ContextTypes.DEFAULT_TYPE):
     audio_path = audio_functions.text_to_audio_ogg(chat_id, text)
     await context.bot.send_audio(chat_id=chat_id, audio=audio_path)
 
-
 # comando incorrecto
 async def unknown(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await context.bot.send_message(chat_id=update.effective_chat.id, text="Sorry, I didn't understand that command.")
-
-
 
 
 # ---------- INLINE FUNCTIONS ------------------------------------------------------------ #

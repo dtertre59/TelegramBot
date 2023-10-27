@@ -30,6 +30,7 @@ TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_ACEITUNO_TOKEN')
 
 # descarga en audio2/audio.ogg
 def url_download_audio(update):
+    chat_id=update.effective_chat.id # id del chat
     voice_message = update.message.voice  # Obtener el mensaje de voz
 
     if voice_message:
@@ -52,7 +53,7 @@ def url_download_audio(update):
         
         if response.status_code == 200:
             # Guardar el archivo en tu sistema local
-            with open('./audio2/audio.ogg', 'wb') as audio_file:
+            with open(f'./audio_t/{chat_id}.ogg', 'wb') as audio_file:
                 audio_file.write(response.content)
                 
             print('Archivo de audio descargado exitosamente.')
@@ -66,7 +67,7 @@ def url_download_audio(update):
 def text_to_audio(chat_id: int, text: str) -> str:
     tts = gTTS(text=text, lang='es', slow= False)  # Puedes especificar el idioma, en este caso, español ('es')
     # audio = f"./audio/{chat_id}.mp3"
-    audio = f"./audio/{chat_id}.wav"
+    audio = f"./audio_ai/{chat_id}.wav"
     # Guardar el audio en un archivo MP3
     tts.save(audio)
     return audio
@@ -76,20 +77,10 @@ def text_to_audio_ogg(chat_id: int, text: str) -> str:
     engine = pyttsx3.init()
     # Control the rate. Higher rate = more speed
     engine.setProperty("rate", 150)
-    output_file = f"./audio/{chat_id}.ogg"
+    output_file = f"./audio_ai/{chat_id}.ogg"
     engine.save_to_file(text, output_file)
     engine.runAndWait()
     return output_file
-
-
-# from pydub import AudioSegment
-# def audio_ogg_to_wav(filepath: str = None):
-#     archivo_ogg = "audio2/audio.ogg"
-#     archivo_wav = "audio2/audio.wav"
-#     # Cargar el archivo .ogg
-#     audio = AudioSegment.from_ogg(archivo_ogg)
-#     audio.export(archivo_wav, format="wav")
-
 
 
 def audio_ogg_to_wav(filepath: str):
@@ -99,9 +90,12 @@ def audio_ogg_to_wav(filepath: str):
 
 
 
-def audio_wav_to_text(filename:str) -> str:
+def audio_wav_to_text(filename:str, complete_path: bool = False) -> str:
     recognizer = sr.Recognizer()
-    file_path = f"./audio2/{filename}.wav" # .wav only
+    if complete_path:
+        file_path = filename
+    else:
+        file_path = f"./audio_ai/{filename}.wav" # .wav only
     # open the file
     with sr.AudioFile(file_path) as source:
         try:
