@@ -1,3 +1,14 @@
+# AÑADIR FFMPEG AL ENOTRNO VIRTUAL 
+import os
+# Ruta a la carpeta de instalación de FFmpeg
+ffmpeg_path = r'C:\Program Files\FFmpeg\bin'
+# Agregar la ruta de FFmpeg al PATH actual
+os.environ['PATH'] = ffmpeg_path + os.pathsep + os.environ['PATH']
+
+from pydub import AudioSegment
+
+###############################################################################################
+
 # text to audio
 from gtts import gTTS
 # from pydub import AudioSegment
@@ -17,7 +28,7 @@ load_dotenv()
 TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_ACEITUNO_TOKEN')
 
 
-
+# descarga en audio2/audio.ogg
 def url_download_audio(update):
     voice_message = update.message.voice  # Obtener el mensaje de voz
 
@@ -71,6 +82,23 @@ def text_to_audio_ogg(chat_id: int, text: str) -> str:
     return output_file
 
 
+# from pydub import AudioSegment
+# def audio_ogg_to_wav(filepath: str = None):
+#     archivo_ogg = "audio2/audio.ogg"
+#     archivo_wav = "audio2/audio.wav"
+#     # Cargar el archivo .ogg
+#     audio = AudioSegment.from_ogg(archivo_ogg)
+#     audio.export(archivo_wav, format="wav")
+
+
+
+def audio_ogg_to_wav(filepath: str):
+    wfn = filepath.replace('.ogg','.wav')
+    x = AudioSegment.from_file(filepath)
+    x.export(wfn, format='wav')    # maybe use original resolution to make smaller
+
+
+
 def audio_wav_to_text(filename:str) -> str:
     recognizer = sr.Recognizer()
     file_path = f"./audio2/{filename}.wav" # .wav only
@@ -115,7 +143,8 @@ def micro_to_text() -> str:
 
 
 
-
+# a = micro_to_text()
+# print(a)
 
 
 

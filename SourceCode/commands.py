@@ -13,9 +13,11 @@ async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def m_audio(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id=update.effective_chat.id
     audio_functions.url_download_audio(update)
-
-
-    # ES NECESARIO PASAR EL AUDIO A .WAV PARA PODER PASARLO A TEXTO CON LA FUNCION  AUDIOWAVTORTEXT EN AUDIO
+    # descarga del audio en carpeta /audio2/audio.ogg
+    # pasar a formato WAV
+    audio_functions.audio_ogg_to_wav("audio2/audio.ogg")
+    # ya tenemos el .wav
+    ## podemos analizar lo que dicew el audio, pasarlo a texto y enviarselo a chat gpt
 
     await context.bot.send_message(chat_id, "HOOOOOOOLLLAAAAA")
 
